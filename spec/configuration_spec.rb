@@ -26,7 +26,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when sftp_host is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -48,7 +48,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when sftp_user is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -70,7 +70,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when sftp_password is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -92,7 +92,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when sftp_port is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -114,7 +114,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when api_host is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -136,7 +136,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when api_user is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -158,7 +158,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when api_password is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -180,7 +180,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when api_port is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -202,7 +202,7 @@ describe Emarsys::Broadcast::Configuration do
     end
 
     describe 'when sender is not set' do
-      before do 
+      before do
         Emarsys::Broadcast::configure {}
       end
 
@@ -230,7 +230,7 @@ describe Emarsys::Broadcast::Configuration do
 
       it 'defaults to 1 hour' do
         expect(Emarsys::Broadcast.configuration.import_delay_hours).to eq 1
-      end 
+      end
     end
   end
 

@@ -4,7 +4,7 @@ require 'spec_helper'
 describe Emarsys::Broadcast::SFTP do
 
   describe 'initialize' do
-    after(:each){restore_default_config}
+    after(:each) { restore_default_config }
     it 'should create a new instance of SFTP from valid configuration' do
       config = Emarsys::Broadcast::configure do |c|
         c.sftp_host = 'localhost'

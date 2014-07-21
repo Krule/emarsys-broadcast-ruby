@@ -1,9 +1,9 @@
 require 'spec_helper'
 
 describe Emarsys::Broadcast::BatchXmlBuilder do
-  let(:batch_builder){batch_builder = Emarsys::Broadcast::BatchXmlBuilder.new}
-  let(:minimal_batch){create_minimal_batch}
-  let(:minimal_html_batch){create_minimal_html_batch}
+  let(:batch_builder) { batch_builder = Emarsys::Broadcast::BatchXmlBuilder.new }
+  let(:minimal_batch) { create_minimal_batch }
+  let(:minimal_html_batch)  { create_minimal_html_batch }
   describe 'initialize' do
     it 'should create a new instance of BatchXmlBuilder' do
       expect(batch_builder).not_to be_nil

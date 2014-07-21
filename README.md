@@ -44,7 +44,7 @@ end
 
 
 # create a batch that you want to send
-batch = Emarsys::Broadcast::Batch.new
+batch = Emarsys::Broadcast::BatchMailer.new
 batch.sender = 'news@company.com'
 batch.name = 'newsletter_2013_06_01'
 batch.subject = 'June 2013 company news'
@@ -65,36 +65,36 @@ This will synchronously send the batch email to all recipients found in CSV file
 If you like, you can construct your batch from a hash, like follows:
 
 ```ruby
-batch = Emarsys::Broadcast::Batch.new name: 'name', subject: 'subject', body_html: '<h1>html body</h1>'
+batch = Emarsys::Broadcast::BatchMailer.new name: 'name', subject: 'subject', body_html: '<h1>html body</h1>'
 ```
 
 ### Required batch attributes
 
-#### Batch#name
+#### BatchMailer#name
 
 Batch name must be a valid identifier, i.e. start with a letter and contain letters, digits and underscores.
 Emarsys requires every batch to have a unique name, but you don't have to maintain the uniqueness, because
 this library internally appends a timestamp to each batch name before submitting it to Emarsys.
 
-#### Batch#subject
+#### BatchMailer#subject
 
 Batch subject must be a string with a maximum length of 255 characters
 
-#### Batch#sender
+#### BatchMailer#sender
 
 Valid email, registed with Emarsys.
 
 Emarsys maintains a list of allowed sender emails, and restricts
-sending emails from arbitrary email. If you want to use an email as a 
-sender, refer to  [working with senders](#working-with-senders)
+sending emails from arbitrary email. If you want to use an email as a
+sender, refer to [working with senders](#working-with-senders)
 
 _Can be set once via configuration_
 
-#### Batch#body_html 
+#### BatchMailer#body_html
 
 Batch body html can be any HTML text, no restrictions
 
-#### Batch#recipients_path
+#### BatchMailer#recipients_path
 
 Absolute path to CSV file with recipients data.
 
@@ -102,26 +102,26 @@ _Can be set once via configuration_
 
 ### Optional batch attributes
 
-#### Batch#body_text
+#### BatchMailer#body_text
 
-It is possible to supply the body contents in plain text, this will broaden compatibility, 
+It is possible to supply the body contents in plain text, this will broaden compatibility,
 because some email clients don't support HTML and will download textual version instead.
 
 ```ruby
-batch = Emarsys::Broadcast::Batch.new
+batch = Emarsys::Broadcast::BatchMailer.new
 batch.name = 'newsletter_2013_06_01'
 batch.subject = 'June 2013 company news'
 batch.body_html = '<h1>Dear 朋友!</h1>'
 batch.body_text = 'Dear 朋友'
 ```
 
-#### Batch#send_time
+#### BatchMailer#send_time
 
 You can set the batch send time using this optional attribute. If you don't set it
 it will be scheduled for immediate sending.
 
 
-#### Batch.import_delay_hours
+#### BatchMailer.import_delay_hours
 
 Time in hours which is allowed for import to be delayed after batch import. Defaults to 1 hour.
 
@@ -147,7 +147,7 @@ Emarsys::Broadcast::configure do |c|
 end
 
 # now you can omit these attributes when constructing a batch:
-batch = Emarsys::Broadcast::Batch.new
+batch = Emarsys::Broadcast::BatchMailer.new
 batch.name = 'newsletter_2013_06_01'
 batch.subject = 'June 2013 company news'
 batch.body_html = '<h1>Dear 朋友!</h1>'
@@ -164,15 +164,15 @@ batch.body_html = '<h1>Dear 朋友!</h1>'
 
 ### Batch validation
 
-`Emarsys::Broadcast` uses `ActiveModel` for validating plain ruby objects, so you have all the methods for 
+`Emarsys::Broadcast` uses `ActiveModel` for validating plain ruby objects, so you have all the methods for
 validation you're accustomed to:
 
 ```ruby
-batch = Emarsys::Broadcast::Batch.new
+batch = Emarsys::Broadcast::BatchMailer.new
 batch.name = 'newsletter_2013_06_01'
 
 batch.valid? # false
-batch.errors 
+batch.errors
 batch.errors.full_messages
 ```
 
@@ -239,7 +239,7 @@ Having additional columns allows you to customize your body_html, for example:
 
 Adding a sender is required before you can start using its email address as a `Batch#sender`
 
-```ruby 
+```ruby
 # assuming you have API configured already
 api = Emarsys::Broadcast::API.new
 # sender requires 3 arguments: id, name, email_address
@@ -257,13 +257,13 @@ batch.sender = 'news@company.com'
 #### Getting a full list of senders
 
 ```ruby
-api.get_senders 
+api.get_senders
 # returns array of `Emarsys::Broadcast::Sender`
 ```
 
 #### Getting a single sender by email
 
-```ruby 
+```ruby
 api.get_sender('news@mycompany.ru')
 ```
 
@@ -277,14 +277,14 @@ api.sender_exists? 'news@mycompany.ru'
 ### Compatibility
 
 This gem is tested on
-* MRI `2.1.2`
+* MRI `2.1.1`, `2.1.2`
 * JRuby 1.9 mode
 
 
 ### Further plans
 
 This library does not yet cover all Emarsys functionality, so the plans are to cover 100% of Emarsys features,
-add async support, more scheduling options etc. 
+add async support, more scheduling options etc.
 
 If you want to help me with this, pull requests are especially welcome :)
 

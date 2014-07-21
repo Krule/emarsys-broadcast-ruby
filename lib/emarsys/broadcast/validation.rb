@@ -6,7 +6,7 @@ module Emarsys
       end
 
       def within_range? value, range
-        raise ArgumentError, 'range is required' if range.nil? || !range.is_a?(::Range)
+        fail ArgumentError, 'range is required' if range.nil? || !range.is_a?(::Range)
         range.include? value
       end
     end

@@ -1,6 +1,6 @@
 require 'spec_helper'
 
-describe Emarsys::Broadcast::Validation do 
+describe Emarsys::Broadcast::Validation do
   class Test
     include Emarsys::Broadcast::Validation
   end
@@ -45,5 +45,5 @@ describe Emarsys::Broadcast::Validation do
       expect{test.within_range?(99, [])}.to raise_error ArgumentError
     end
   end
-  
+
 end

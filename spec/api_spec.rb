@@ -1,11 +1,12 @@
 require 'spec_helper'
 
 describe Emarsys::Broadcast::API do
-  before(:each) do 
+  before(:each) do
     create_valid_config
     stub_senders_ok_two_senders
   end
-  let(:config){create_valid_config}
+
+  let(:config) { create_valid_config }
 
   describe 'initialize' do
     context 'when configured properly' do
@@ -29,28 +30,28 @@ describe Emarsys::Broadcast::API do
 
   describe '#send_batch' do
 
-    let(:batch){create_minimal_batch}
+    let(:batch) { create_minimal_batch }
     let(:api) do
       api = Emarsys::Broadcast::API.new
-      allow(api).to receive(:upload_recipients){true}
+      allow(api).to receive(:upload_recipients) { true }
       api
     end
-    before{stub_post_ok}
 
+    before { stub_post_ok }
 
     it 'should raise ValidationError if passed invalid batch' do
-      expect {
-        invalid_batch = Emarsys::Broadcast::Batch.new
+      expect do
+        invalid_batch = Emarsys::Broadcast::BatchMailing.new
         api.send_batch invalid_batch
-      }.to raise_error Emarsys::Broadcast::ValidationError
+      end.to raise_error Emarsys::Broadcast::ValidationError
     end
 
     it 'should raise ValidationError if such sender does not exist' do
       valid_batch = create_minimal_batch
       valid_batch.sender = 'nonexistent@sender.com'
-      expect{
+      expect do
         api.send_batch valid_batch
-      }.to raise_error Emarsys::Broadcast::ValidationError
+      end.to raise_error Emarsys::Broadcast::ValidationError
     end
 
     it 'should post to batch creation Emarsys URL given a valid batch' do
@@ -66,7 +67,7 @@ describe Emarsys::Broadcast::API do
     context 'batch supplementation from config' do
 
       describe 'recipients_path' do
-        before(:each)do 
+        before(:each)do
           create_valid_config
           Emarsys::Broadcast.configuration.recipients_path = '/path/from/configuration'
         end
@@ -160,7 +161,7 @@ describe Emarsys::Broadcast::API do
   end
 
   describe '#get_senders' do
-    let(:api){Emarsys::Broadcast::API.new}
+    let(:api) { Emarsys::Broadcast::API.new }
     it 'should call Emarsys URL for getting senders via GET' do
       api.get_senders
       expect(WebMock).to have_requested(:get, 'https://a:a@e3.emarsys.net/bmapi/v2/senders')

@@ -1,7 +1,6 @@
 module Emarsys
   module Broadcast
     class API
-
       def initialize
         @config = Emarsys::Broadcast.configuration
         @sftp = SFTP.new @config
@@ -16,6 +15,10 @@ module Emarsys
         create_batch(batch)
         upload_recipients(batch.recipients_path)
         trigger_import(batch)
+      end
+
+      def send_transaction(transaction)
+        # TODO: Implement
       end
 
       def create_batch(batch)
@@ -42,7 +45,7 @@ module Emarsys
       end
 
       def get_sender(email)
-        get_senders.find{|s| s.address == email}
+        get_senders.find { |s| s.address == email }
       end
 
       def create_sender(sender)
@@ -51,7 +54,7 @@ module Emarsys
       end
 
       def sender_exists?(email)
-        get_senders.any?{|s|s.address == email}
+        get_senders.any? { |s|s.address == email }
       end
 
       private
@@ -66,12 +69,12 @@ module Emarsys
       end
 
       def validate_batch(batch)
-        raise ValidationError.new('Batch is invalid', batch.errors.full_messages) unless batch.valid?
+        fail ValidationError.new('Batch is invalid', batch.errors.full_messages) unless batch.valid?
       end
 
       def validate_sender(email)
         msg = "Email `#{email}` is not registered with Emarsys as a sender, register it with `create_sender` api call"
-        raise ValidationError.new(msg, [msg]) unless sender_exists? email 
+        fail ValidationError.new(msg, [msg]) unless sender_exists? email
       end
     end
   end

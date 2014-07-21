@@ -23,13 +23,13 @@ module Emarsys
         xml.to_xml
       end
 
-      private 
+      private
 
       def validate_options(options)
-        raise ArgumentError, 'options can not be nil' unless options
-        raise ArgumentError, 'name is required' unless string_present? options[:name]
+        fail ArgumentError, 'options can not be nil' unless options
+        fail ArgumentError, 'name is required' unless string_present? options[:name]
       end
- 
+
     end
   end
 end

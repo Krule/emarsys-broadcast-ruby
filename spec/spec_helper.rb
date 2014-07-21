@@ -25,7 +25,7 @@ def create_valid_config
 end
 
 def create_minimal_batch
-  batch = Emarsys::Broadcast::Batch.new
+  batch = Emarsys::Broadcast::BatchMailing.new
   batch.name="batch_name"
   batch.subject = 'subject'
   batch.body_html = 'body'
@@ -36,7 +36,7 @@ def create_minimal_batch
 end
 
 def create_minimal_html_batch
-  batch = Emarsys::Broadcast::Batch.new
+  batch = Emarsys::Broadcast::BatchMailing.new
   batch.name="batch_name"
   batch.subject = 'subject'
   batch.body_html = '<h1>hello</h1>'
