@@ -3,22 +3,20 @@ module Emarsys
     class ConfigurationError < StandardError; end
 
     class Configuration
-      attr_accessor \
-        :sftp_host,
-        :sftp_user,
-        :sftp_password,
-        :sftp_port,
-        :api_host,
-        :api_base_path,
-        :api_user,
-        :api_password,
-        :api_port,
-        :api_timeout,
-        :sender,
-        :sender_domain,
-        :recipients_path,
-        # https://e3.emarsys.net/bmapi/v2/doc/Properties.html#ImportDelay
-        :import_delay_hours
+      attr_accessor :api_base_path,
+                    :api_host,
+                    :api_password,
+                    :api_port,
+                    :api_timeout,
+                    :api_user,
+                    :import_delay_hours, # https://e3.emarsys.net/bmapi/v2/doc/Properties.html#ImportDelay
+                    :recipients_path,
+                    :sender,
+                    :sender_domain,
+                    :sftp_host,
+                    :sftp_password,
+                    :sftp_port,
+                    :sftp_user
 
       def initialize
         @sftp_host = 'e3.emarsys.net'
