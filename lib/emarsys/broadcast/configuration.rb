@@ -23,9 +23,9 @@ module Emarsys
       def initialize
         @sftp_host = 'e3.emarsys.net'
         @sftp_port = 22
-        @api_host = 'e3.emarsys.net'
-        @api_base_path = '/bmapi/v2'
-        @api_port = 80
+        @api_host = 'api.broadcast1.emarsys.net'
+        @api_base_path = '/v2'
+        @api_port = 433
         @api_timeout = 600 # 10 minutes
         @import_delay_hours = 1
       end

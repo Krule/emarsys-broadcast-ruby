@@ -56,14 +56,14 @@ end
 
 def stub_senders_ok_two_senders(senders = [])
   fixture_path = File.dirname(__FILE__) + '/fixtures/responses/senders_200_two_senders.http'
-  stub_request(:get, "https://a:a@e3.emarsys.net/bmapi/v2/senders")
+  stub_request(:get, "https://a:a@api.broadcast1.emarsys.net/v2/senders")
     .with(:headers => {'Accept'=>'*/*', 'Content-Type'=>'application/xml', 'User-Agent'=>'Ruby'})
     .to_return(File.new fixture_path)
 end
 
 def stub_post_ok
   fixture_path = File.dirname(__FILE__) + '/fixtures/responses/ok.http'
-  stub_request(:post, %r{https://a:a@e3.emarsys.net/bmapi/v2/.*}).to_return(http_ok)
+  stub_request(:post, %r{https://a:a@api.broadcast1.emarsys.net/v2/.*}).to_return(http_ok)
 end
 
 def http_ok

@@ -56,12 +56,12 @@ describe Emarsys::Broadcast::API do
 
     it 'should post to batch creation Emarsys URL given a valid batch' do
       api.send_batch(batch)
-      expect(WebMock).to have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name')
+      expect(WebMock).to have_requested(:post, 'https://a:a@api.broadcast1.emarsys.net/v2/batches/batch_name')
     end
 
     it 'should post to batch import Emarsys URL given a valid batch' do
       api.send_batch(batch)
-      expect(WebMock).to have_requested(:post, 'https://a:a@e3.emarsys.net/bmapi/v2/batches/batch_name/import')
+      expect(WebMock).to have_requested(:post, 'https://a:a@api.broadcast1.emarsys.net/v2/batches/batch_name/import')
     end
 
     context 'batch supplementation from config' do
@@ -164,7 +164,7 @@ describe Emarsys::Broadcast::API do
     let(:api) { Emarsys::Broadcast::API.new }
     it 'should call Emarsys URL for getting senders via GET' do
       api.get_senders
-      expect(WebMock).to have_requested(:get, 'https://a:a@e3.emarsys.net/bmapi/v2/senders')
+      expect(WebMock).to have_requested(:get, 'https://a:a@api.broadcast1.emarsys.net/v2/senders')
     end
 
     it 'should return an array of senders' do

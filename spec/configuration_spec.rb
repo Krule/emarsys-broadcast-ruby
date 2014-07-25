@@ -119,7 +119,7 @@ describe Emarsys::Broadcast::Configuration do
       end
 
       it 'defaults to e3.emarsys.net' do
-        expect(Emarsys::Broadcast.configuration.api_host).to eq 'e3.emarsys.net'
+        expect(Emarsys::Broadcast.configuration.api_host).to eq 'api.broadcast1.emarsys.net'
       end
     end
 
@@ -184,8 +184,8 @@ describe Emarsys::Broadcast::Configuration do
         Emarsys::Broadcast::configure {}
       end
 
-      it 'defaults to 80' do
-        expect(Emarsys::Broadcast.configuration.api_port).to eq 80
+      it 'defaults to 433' do
+        expect(Emarsys::Broadcast.configuration.api_port).to eq 433
       end
     end
 
