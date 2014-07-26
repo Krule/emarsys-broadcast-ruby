@@ -9,8 +9,8 @@ module Emarsys
       end
 
       def send_batch(batch)
-        batch = supplement_batch_from_config(batch)
-        validate_batch(batch)
+        batch = supplement_mailing_from_config(batch)
+        validate_mailing(batch)
         validate_sender(batch.sender)
         create_batch(batch)
         upload_recipients(batch.recipients_path)
@@ -18,7 +18,7 @@ module Emarsys
       end
 
       def send_transaction(transaction)
-        # TODO: Implement
+        transaction = supplement_mailing_from_config()
       end
 
       def create_batch(batch)
@@ -59,17 +59,17 @@ module Emarsys
 
       private
 
-      def supplement_batch_from_config(batch)
-        batch.recipients_path ||= @config.recipients_path
-        batch.send_time ||= Time.now
-        batch.sender ||= @config.sender
-        batch.sender_domain ||= @config.sender_domain
-        batch.import_delay_hours ||= @config.import_delay_hours
-        batch
+      def supplement_mailing_from_config(mailing)
+        mailing.recipients_path ||= @config.recipients_path
+        mailing.send_time ||= Time.now
+        mailing.sender ||= @config.sender
+        mailing.sender_domain ||= @config.sender_domain
+        mailing.import_delay_hours ||= @config.import_delay_hours
+        mailing
       end
 
-      def validate_batch(batch)
-        fail ValidationError.new('Batch is invalid', batch.errors.full_messages) unless batch.valid?
+      def validate_mailing(mailing)
+        fail ValidationError.new('Mailing is invalid', mailing.errors.full_messages) unless mailing.valid?
       end
 
       def validate_sender(email)
