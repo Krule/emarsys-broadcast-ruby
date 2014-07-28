@@ -11,8 +11,8 @@ module Emarsys
                     :api_user,
                     :import_delay_hours, # https://e3.emarsys.net/bmapi/v2/doc/Properties.html#ImportDelay
                     :recipients_path,
-                    :sender,
-                    :sender_domain,
+                    :default_sender,
+                    :sender_domain, # http://api.broadcast2.emarsys.net/doc/v2/Domains.html#Domains
                     :sftp_host,
                     :sftp_password,
                     :sftp_port,

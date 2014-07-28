@@ -10,7 +10,8 @@ module Emarsys
                     :body_text,
                     :name,
                     :sender_id,
-                    :subject
+                    :subject,
+                    :status
 
       validates :name, :subject, :body_html, :sender, :sender_domain,
                 presence: true

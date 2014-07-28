@@ -8,7 +8,9 @@ module Emarsys
             xml.runDate format_time(batch.send_time)
             xml.properties do
               shared_properties(xml, batch)
-              xml.property(key: :ImportDelay) { xml.text batch.import_delay_hours }
+              if batch.import_delay_hours
+                xml.property(key: :ImportDelay) { xml.text batch.import_delay_hours }
+              end
             end
             shared_nodes(xml, batch)
           end

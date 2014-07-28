@@ -6,9 +6,6 @@ module Emarsys
                     :send_time
 
       validates :recipients_path, presence: true
-
-      def create
-      end
     end
   end
 end

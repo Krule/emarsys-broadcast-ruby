@@ -192,12 +192,12 @@ describe Emarsys::Broadcast::Configuration do
     describe 'when sender is set' do
       before do
         Emarsys::Broadcast::configure do |c|
-          c.sender = 'sender'
+          c.default_sender = 'sender'
         end
       end
 
       it 'returns sender' do
-        expect(Emarsys::Broadcast.configuration.sender).to eq 'sender'
+        expect(Emarsys::Broadcast.configuration.default_sender).to eq 'sender'
       end
     end
 
@@ -207,7 +207,7 @@ describe Emarsys::Broadcast::Configuration do
       end
 
       it 'defaults to nil' do
-        expect(Emarsys::Broadcast.configuration.sender).to be_nil
+        expect(Emarsys::Broadcast.configuration.default_sender).to be_nil
       end
     end
 

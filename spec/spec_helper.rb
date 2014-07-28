@@ -20,29 +20,31 @@ def create_valid_config
     c.api_user = 'a'
     c.api_password = 'a'
 
-    c.sender = spec_sender
+    c.default_sender = spec_sender
     c.recipients_path = '/some/path.csv'
   end
 end
 
 def create_minimal_batch
   batch = Emarsys::Broadcast::BatchMailing.new
-  batch.name="batch_name"
+  batch.language = 'en'
+  batch.name = 'batch_name'
   batch.subject = 'subject'
   batch.body_html = 'body'
   batch.send_time = spec_time
-  batch.sender = 'sender1@example.com'
+  batch.sender = api.retrieve_sender_by_email('sender1@example.com')
   batch.sender_domain = 'e3.emarsys.net'
   batch
 end
 
 def create_minimal_html_batch
   batch = Emarsys::Broadcast::BatchMailing.new
+  batch.language = 'en'
   batch.name="batch_name"
   batch.subject = 'subject'
   batch.body_html = '<h1>hello</h1>'
   batch.send_time = spec_time
-  batch.sender = 'sender1@example.com'
+  batch.sender = api.retrieve_sender_by_email('sender1@example.com')
   batch.sender_domain = 'e3.emarsys.net'
   batch
 end

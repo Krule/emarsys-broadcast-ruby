@@ -48,7 +48,7 @@ describe Emarsys::Broadcast::API do
 
     it 'should raise ValidationError if such sender does not exist' do
       valid_batch = create_minimal_batch
-      valid_batch.sender = 'nonexistent@sender.com'
+      valid_batch.sender = api.retrieve_sender_by_email('nonexistent@sender.com')
       expect do
         api.send_batch valid_batch
       end.to raise_error Emarsys::Broadcast::ValidationError
@@ -86,19 +86,19 @@ describe Emarsys::Broadcast::API do
       describe 'sender' do
         before(:each) do
           create_valid_config
-          Emarsys::Broadcast.configuration.sender = 'sender1@example.com'
+          Emarsys::Broadcast.configuration.default_sender = 'sender1@example.com'
         end
 
         it 'is in config but not in batch, batch should be updated with sender from config' do
           batch.sender = nil
           api.send_batch batch
-          expect(batch.sender).to eq 'sender1@example.com'
+          expect(batch.sender.to_s).to eq 'sender1@example.com'
         end
 
         it 'is in config and in batch, batch should not be updated with sender from config' do
-          batch.sender = 'sender2@example.com'
+          batch.sender = api.retrieve_sender_by_email('sender2@example.com')
           api.send_batch batch
-          expect(batch.sender).to eq 'sender2@example.com'
+          expect(batch.sender.to_s).to eq 'sender2@example.com'
         end
       end
 
@@ -111,7 +111,7 @@ describe Emarsys::Broadcast::API do
         it 'is in config but not in batch, batch should be updated with sender_domain from config' do
           batch.sender_domain = nil
           api.send_batch batch
-          expect(batch.sender_domain).to eq 'configuration.com'
+          expect(batch.sender_domain.to_s).to eq 'configuration.com'
         end
 
         it 'is in config and in batch, batch should not be updated with sender_domain from config' do

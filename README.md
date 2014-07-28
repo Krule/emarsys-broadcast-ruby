@@ -2,14 +2,16 @@
 <h2>Emarsys::Broadcast</h2>
 <h3>Ruby library for Emarsys batch mailing API</h3>
 <br/>
-<a href="https://travis-ci.org/Valve/emarsys-broadcast-ruby">
-  <img src="http://img.shields.io/travis/Valve/emarsys-broadcast-ruby/master.svg?style=flat" />
+<a href="https://travis-ci.org/Krule/emarsys-broadcast-ruby">
+  <img src="http://img.shields.io/travis/Krule/emarsys-broadcast-ruby/master.svg?style=flat" />
 </a>
-<a href="https://codeclimate.com/github/Valve/emarsys-broadcast-ruby">
-  <img src="http://img.shields.io/codeclimate/github/Valve/emarsys-broadcast-ruby.svg?style=flat" />
+<a href="https://codeclimate.com/github/Krule/emarsys-broadcast-ruby">
+  <img src="http://img.shields.io/codeclimate/github/Krule/emarsys-broadcast-ruby.svg?style=flat" />
 </a>
 </p>
 
+
+<!-- https://codeclimate.com/github/Krule/emarsys-broadcast-ruby.png -->
 ## Installation
 
 Add this line to your application's Gemfile:
@@ -143,7 +145,7 @@ Emarsys::Broadcast::configure do |c|
 
   c.sender = 'sender_id'
   c.sender_domain = 'mail.your.company.com'
-  c.recipients_path = '/path/to/hyour/csv/with/emails'
+  c.recipients_path = '/path/to/your/csv/with/emails'
 end
 
 # now you can omit these attributes when constructing a batch:
@@ -181,7 +183,7 @@ You can always validate your batch before submitting it.
 Note that calling `API#send_batch` on an invalid batch will throw `ValidationException`
 
 ```ruby
-batch = get_invalid_batch
+batch = retrieve_invalid_batch
 api = Emarsys::Broadcast::API.new
 begin
   api.send_batch batch
@@ -257,14 +259,14 @@ batch.sender = 'news@company.com'
 #### Getting a full list of senders
 
 ```ruby
-api.get_senders
+api.retrieve_senders
 # returns array of `Emarsys::Broadcast::Sender`
 ```
 
 #### Getting a single sender by email
 
 ```ruby
-api.get_sender('news@mycompany.ru')
+api.retrieve_sender('news@mycompany.ru')
 ```
 
 #### Finding if a sender exists by email

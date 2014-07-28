@@ -18,7 +18,7 @@ module Emarsys
       end
 
       def shared_properties(xml, mailing)
-        xml.property(key: :Sender) { xml.text mailing.sender_id }
+        xml.property(key: :Sender) { xml.text mailing.sender.id }
         xml.property(key: :Language) { xml.text mailing.language }
         xml.property(key: :Encoding) { xml.text 'UTF-8' }
         xml.property(key: :Domain) { xml.text mailing.sender_domain }
