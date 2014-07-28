@@ -3,21 +3,23 @@ module Emarsys
     class API
       def initialize
         @config = Emarsys::Broadcast.configuration
+        @logger = Emarsys::Broadcast.logger
         @sftp = SFTP.new @config
         @http = HTTP.new @config
         @xml_builder = XmlBuilder.new
       end
 
       def send_batch(batch)
-        batch = supplement_batch_from_config(batch)
-        create_batch(batch)
-        upload_recipients(batch.recipients_path)
-        trigger_import(batch)
+        batch = supplement_batch_from_config batch
+        create_batch batch
+        upload_recipients batch.recipients_path
+        trigger_import batch
       end
 
       def send_transactional(mailing)
         mailing = supplement_from_config(mailing)
         create_transactional(mailing)
+        trigger_send(publish_transactional(mailing), mailing.recipients)
       end
 
       def create_batch(batch)
@@ -37,6 +39,19 @@ module Emarsys
       def trigger_import(batch)
         import_xml = XmlBuilder.new.import_xml(File.basename(batch.recipients_path))
         @http.post("batches/#{batch.name}/import", import_xml)
+      end
+
+      def publish_transactional(mailing)
+        response = @http.post("transactional_mailings/#{mailing.name}/revisions", '<nothing/>')
+        Nokogiri::XML(response).xpath('//revision').map{ |n| Revision.new(n.attr('id')) }
+      end
+
+      # recipients = CSV.string
+      def trigger_send(revision, recipients)
+        unless revision.present?
+          return @logger.error(self) { 'no revision published yet' }
+        end
+        @http.post("transactional_mailings/#{mailing.name}/revisions/#{mailing.revision/recipients}", recipients_string)
       end
 
       def retrieve_batch_mailings
