@@ -50,7 +50,7 @@ def create_minimal_html_batch
 end
 
 def spec_time
-  Time.new(2013, 12, 31, 0, 0, 0, "-08:00")
+  Time.new(2013, 12, 31, 0, 0, 0, "+00:00")
 end
 
 def spec_sender
