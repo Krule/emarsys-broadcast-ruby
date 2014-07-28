@@ -22,10 +22,10 @@ module Emarsys
       end
 
       def create_batch(batch)
-        emarsys_sender = get_sender(batch.sender)
+        emarsys_sender = retrieve_sender(batch.sender)
         batch.sender_id = emarsys_sender.id
         batch_xml = BatchXmlBuilder.new.build(batch)
-        @http.post("#{@config.api_base_path}/batches/#{batch.name}", batch_xml)
+        @http.post("batches/#{batch.name}", batch_xml)
       end
 
       def upload_recipients(recipients_path)
@@ -34,27 +34,39 @@ module Emarsys
 
       def trigger_import(batch)
         import_xml = XmlBuilder.new.import_xml(File.basename(batch.recipients_path))
-        @http.post("#{@config.api_base_path}/batches/#{batch.name}/import", import_xml)
+        @http.post("batches/#{batch.name}/import", import_xml)
       end
 
-      def get_senders
-        response = @http.get("#{@config.api_base_path}/senders")
+      def retrieve_fields
+        response = @http.get("fields")
+        Nokogiri::XML(response).xpath('//field').map do |node|
+          RecipientField.new(node.attr('name'), node.attr('type'))
+        end
+      end
+
+      def retrieve_transactional_mailings
+        response = @http.get("transactional_mailings")
+        # TODO: Parse into object
+      end
+
+      def retrieve_senders
+        response = @http.get("senders")
         Nokogiri::XML(response).xpath('//sender').map do |node|
           Sender.new(node.attr('id'), node.xpath('name').text, node.xpath('address').text)
         end
       end
 
-      def get_sender(email)
-        get_senders.find { |s| s.address == email }
+      def retrieve_sender(email)
+        retrieve_senders.find { |s| s.address == email }
       end
 
       def create_sender(sender)
         sender_xml = @xml_builder.sender_xml(sender)
-        @http.put("#{@config.api_base_path}/senders/#{sender.id}", sender_xml)
+        @http.put("senders/#{sender.id}", sender_xml)
       end
 
       def sender_exists?(email)
-        get_senders.any? { |s|s.address == email }
+        retrieve_senders.any? { |s|s.address == email }
       end
 
       private

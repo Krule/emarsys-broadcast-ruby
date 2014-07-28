@@ -1,4 +1,5 @@
 require 'net/http'
+require 'digest/sha1'
 module Emarsys
   module Broadcast
     class HTTP < TransferProtocol
@@ -22,7 +23,7 @@ module Emarsys
 
       def construct_request(method, path, data)
         req = select_http_method(method, path)
-        req.basic_auth(@config.api_user, @config.api_password)
+        req.basic_auth(@config.api_user, Digest::SHA1.hexdigest(@config.api_password))
         req.body = data
         req.content_type = 'application/xml'
         req
@@ -38,7 +39,7 @@ module Emarsys
 
       def request(path, data, method)
         initialize_request.start do |http|
-          res = http.request(construct_request(method, path, data))
+          res = http.request(construct_request(method, "#{@config.api_base_path}/#{path}", data))
           return res.body if res.is_a?(Net::HTTPSuccess)
           Emarsys::Broadcast.logger.error(HTTP) { res.body }
         end

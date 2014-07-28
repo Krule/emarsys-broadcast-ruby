@@ -6,6 +6,9 @@ module Emarsys
           xml.mailing do
             xml.name transaction.name
             xml.properties { shared_properties(xml, transaction) }
+            xml.recipientFields {
+
+            }
             shared_nodes(xml, transaction)
           end
         end
