@@ -7,7 +7,7 @@ describe Emarsys::Broadcast::BatchXmlBuilder do
   end
   let(:config) { create_valid_config }
   let(:api){ Emarsys::Broadcast::API.new }
-  let(:batch_builder) { batch_builder = Emarsys::Broadcast::BatchXmlBuilder.new }
+  let(:batch_builder) { Emarsys::Broadcast::BatchXmlBuilder.new }
   let(:minimal_batch) { create_minimal_batch }
   let(:minimal_html_batch)  { create_minimal_html_batch }
   describe 'initialize' do

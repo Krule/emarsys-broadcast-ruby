@@ -8,7 +8,7 @@ module Emarsys
             xml.properties { shared_properties(xml, transactional) }
             xml.recipientFields {
               transactional.recipient_fields.each do |field|
-                xml.name field
+                xml.field name: field
               end
             }
             shared_nodes(xml, transactional)

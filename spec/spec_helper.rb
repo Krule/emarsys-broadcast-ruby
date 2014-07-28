@@ -37,6 +37,18 @@ def create_minimal_batch
   batch
 end
 
+def create_minimal_transaction
+  transaction = Emarsys::Broadcast::TransactionalMailing.new
+  transaction.language = 'de'
+  transaction.name = 'transaction_name'
+  transaction.subject = 'transaction_subject'
+  transaction.body_html = '<h1>Hello $$EMAIL|$$</h1>'
+  transaction.recipient_fields = %W(EMAIL)
+  transaction.sender = api.retrieve_sender_by_email('sender1@example.com')
+  transaction.sender_domain = 'e3.emarsys.net'
+  transaction
+end
+
 def create_minimal_html_batch
   batch = Emarsys::Broadcast::BatchMailing.new
   batch.language = 'en'
@@ -47,6 +59,18 @@ def create_minimal_html_batch
   batch.sender = api.retrieve_sender_by_email('sender1@example.com')
   batch.sender_domain = 'e3.emarsys.net'
   batch
+end
+
+def create_minimal_html_transaction
+  transaction = Emarsys::Broadcast::TransactionalMailing.new
+  transaction.language = 'de'
+  transaction.name="transaction_name"
+  transaction.subject = 'transaction_subject'
+  transaction.body_html = '<h1>hello</h1>'
+  transaction.recipient_fields = %W(EMAIL)
+  transaction.sender = api.retrieve_sender_by_email('sender1@example.com')
+  transaction.sender_domain = 'e3.emarsys.net'
+  transaction
 end
 
 def spec_time
