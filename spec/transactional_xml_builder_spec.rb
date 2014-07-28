@@ -19,22 +19,14 @@ describe Emarsys::Broadcast::TransactionalXmlBuilder do
   describe '#build' do
     it 'should return a valid Emarsys Xml XML string' do
       actual_xml = transactional_builder.build(minimal_transaction).chomp
-      if RUBY_ENGINE == 'jruby'
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_transaction_jruby.xml'
-      else
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_transaction.xml'
-      end
+      fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_transaction.xml'
       expected_xml = File.read(fixture_path)
       expect(actual_xml).to eq expected_xml
     end
 
     it 'should properly escape the body of the Emarsys Xml XML string' do
       actual_xml = transactional_builder.build(minimal_html_transaction).chomp
-      if RUBY_ENGINE == 'jruby'
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_escaped_transaction_jruby.xml'
-      else
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_escaped_transaction.xml'
-      end
+      fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_escaped_transaction.xml'
       expected_xml = File.read(fixture_path)
       expect(actual_xml).to eq expected_xml
     end

@@ -9,21 +9,25 @@ module Emarsys
       end
 
       def send_batch(batch)
-        batch = supplement_mailing_from_config(batch)
-        validate_mailing(batch)
-        validate_sender(batch.sender)
+        batch = supplement_batch_from_config(batch)
         create_batch(batch)
         upload_recipients(batch.recipients_path)
         trigger_import(batch)
       end
 
-      def send_transactional(transactional)
-        transactional = supplement_mailing_from_config(transactional)
+      def send_transactional(mailing)
+        mailing = supplement_from_config(mailing)
+        create_transactional(mailing)
       end
 
       def create_batch(batch)
-        batch_xml = BatchXmlBuilder.new.build(batch)
-        @http.post("batches/#{batch.name}", batch_xml)
+        xml = BatchXmlBuilder.new.build(batch)
+        @http.post("batches/#{batch.name}", xml)
+      end
+
+      def create_transactional(mailing)
+        xml = TransactionalXmlBuilder.new.build(batch)
+        @http.post("transactional_mailings/#{mailing.name}", xml)
       end
 
       def upload_recipients(recipients_path)
@@ -96,16 +100,22 @@ module Emarsys
         retrieve_senders.any? { |s| s.address == email.to_s }
       end
 
-      private
+      def supplement_batch_from_config(batch)
+        batch.import_delay_hours ||= @config.import_delay_hours
+        batch.recipients_path ||= @config.recipients_path
+        batch.send_time ||= Time.now
+        supplement_from_config(batch)
+      end
 
-      def supplement_mailing_from_config(mailing)
-        mailing.import_delay_hours ||= @config.import_delay_hours
-        mailing.recipients_path ||= @config.recipients_path
-        mailing.send_time ||= Time.now
+      def supplement_from_config(mailing)
         mailing.sender ||= retrieve_sender_by_email(@config.default_sender)
+        validate_sender(mailing.sender)
         mailing.sender_domain ||= SenderDomain.new(@config.sender_domain)
+        validate_mailing(mailing)
         mailing
       end
+
+      private
 
       def validate_mailing(mailing)
         fail ValidationError.new('Mailing is invalid', mailing.errors.full_messages) unless mailing.valid?

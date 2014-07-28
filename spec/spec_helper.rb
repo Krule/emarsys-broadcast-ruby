@@ -43,6 +43,7 @@ def create_minimal_transaction
   transaction.name = 'transaction_name'
   transaction.subject = 'transaction_subject'
   transaction.body_html = '<h1>Hello $$EMAIL|$$</h1>'
+  transaction.body_text = 'Hello $$EMAIL|$$'
   transaction.recipient_fields = %W(EMAIL)
   transaction.sender = api.retrieve_sender_by_email('sender1@example.com')
   transaction.sender_domain = 'e3.emarsys.net'

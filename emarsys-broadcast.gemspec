@@ -21,6 +21,7 @@ Gem::Specification.new do |spec|
   spec.add_dependency 'net-sftp'
   spec.add_dependency 'nokogiri'
   spec.add_dependency 'activemodel', '~> 4.0'
+  spec.add_dependency 'actionview', '~> 4.0'
 
   spec.add_development_dependency 'bundler'
   spec.add_development_dependency 'rake'
@@ -28,7 +29,7 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'timecop'
   spec.add_development_dependency 'webmock'
   # when specs fail for some reason
-  # spec.add_development_dependency 'pry'
+  spec.add_development_dependency 'pry'
   # spec.add_development_dependency 'pry-debugger'
   # spec.add_development_dependency 'plymouth'
 end

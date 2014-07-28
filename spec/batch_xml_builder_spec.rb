@@ -19,22 +19,14 @@ describe Emarsys::Broadcast::BatchXmlBuilder do
   describe '#build' do
     it 'should return a valid Emarsys Xml XML string' do
       actual_xml = batch_builder.build(minimal_batch).chomp
-      if RUBY_ENGINE == 'jruby'
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_batch_jruby.xml'
-      else
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_batch.xml'
-      end
+      fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_batch.xml'
       expected_xml = File.read(fixture_path)
       expect(actual_xml).to eq expected_xml
     end
 
     it 'should properly escape the body of the Emarsys Xml XML string' do
       actual_xml = batch_builder.build(minimal_html_batch).chomp
-      if RUBY_ENGINE == 'jruby'
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_escaped_batch_jruby.xml'
-      else
-        fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_escaped_batch.xml'
-      end
+      fixture_path = File.dirname(__FILE__) + '/fixtures/xml/minimal_escaped_batch.xml'
       expected_xml = File.read(fixture_path)
       expect(actual_xml).to eq expected_xml
     end

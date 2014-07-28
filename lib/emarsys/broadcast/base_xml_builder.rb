@@ -1,7 +1,9 @@
 require 'nokogiri'
+require 'action_view'
 module Emarsys
   module Broadcast
     class BaseXmlBuilder
+      include ActionView::Helpers::SanitizeHelper
       def build(arg)
         fail ArgumentError, 'argument is required' unless arg
         build_xml(arg).to_xml
@@ -14,7 +16,7 @@ module Emarsys
       def shared_nodes(xml, mailing)
         xml.subject mailing.subject
         xml.html mailing.body_html
-        xml.text mailing.body_text
+        xml.text_ mailing.body_text || strip_tags(mailing.body_html)
       end
 
       def shared_properties(xml, mailing)
