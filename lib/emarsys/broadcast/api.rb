@@ -116,7 +116,7 @@ module Emarsys
         @http.put("senders/#{sender.id}", sender.to_xml)
       end
 
-      def destory_sender(id)
+      def destroy_sender(id)
         @http.delete("senders/#{id}")
       end
 
