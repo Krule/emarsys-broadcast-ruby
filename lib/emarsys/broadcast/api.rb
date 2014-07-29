@@ -112,8 +112,7 @@ module Emarsys
       end
 
       def create_sender(sender)
-        sender_xml = @xml_builder.sender_xml(sender)
-        @http.put("senders/#{sender.id}", sender_xml)
+        @http.put("senders/#{sender.id}", sender.to_xml)
       end
 
       def sender_exists?(email)

@@ -28,8 +28,5 @@ Gem::Specification.new do |spec|
   spec.add_development_dependency 'rspec'
   spec.add_development_dependency 'timecop'
   spec.add_development_dependency 'webmock'
-  # when specs fail for some reason
   spec.add_development_dependency 'pry'
-  # spec.add_development_dependency 'pry-debugger'
-  # spec.add_development_dependency 'plymouth'
 end

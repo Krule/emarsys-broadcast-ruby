@@ -10,6 +10,15 @@ module Emarsys
       def to_s
         address
       end
+
+      def to_xml
+        Nokogiri::XML::Builder.new do |xml|
+          xml.sender do
+            xml.name(name)
+            xml.address(address)
+          end
+        end.to_xml
+      end
     end
   end
 end

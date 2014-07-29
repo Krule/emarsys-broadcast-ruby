@@ -98,6 +98,11 @@ def stub_post_ok
   stub_request(:post, %r{https://a:#{mock_password}@api.broadcast1.emarsys.net/v2/.*}).to_return(http_ok)
 end
 
+def stub_put_ok
+  fixture_path = File.dirname(__FILE__) + '/fixtures/responses/ok.http'
+  stub_request(:put, %r{https://a:#{mock_password}@api.broadcast1.emarsys.net/v2/.*}).to_return(http_ok)
+end
+
 def http_ok
   fixture_path = File.dirname(__FILE__) + '/fixtures/responses/ok.http'
   File.new fixture_path
