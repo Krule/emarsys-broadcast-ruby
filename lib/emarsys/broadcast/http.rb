@@ -51,9 +51,10 @@ module Emarsys
 
       def select_http_method(method, path)
         case method.downcase.to_sym
+        when :delete then Net::HTTP::Delete.new(path)
+        when :get  then Net::HTTP::Get.new(path)
         when :post then Net::HTTP::Post.new(path)
         when :put  then Net::HTTP::Put.new(path)
-        when :get  then Net::HTTP::Get.new(path)
         end
       end
     end
