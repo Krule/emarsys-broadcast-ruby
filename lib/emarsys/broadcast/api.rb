@@ -111,7 +111,8 @@ module Emarsys
         retrieve_senders.find { |s| s.id == id }
       end
 
-      def create_sender(sender)
+      def create_sender(id, name, address)
+        sender = Sender.new(id, name, address)
         @http.put("senders/#{sender.id}", sender.to_xml)
       end
 
