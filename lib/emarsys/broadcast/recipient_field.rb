@@ -18,9 +18,9 @@ module Emarsys
       def to_xml
         Nokogiri::XML::Builder.new do |xml|
           xml.fields do
-            xml.field(name: name,   type: type)
+            xml.field(name: name, type: type)
           end
-        end
+        end.to_xml
       end
     end
   end
