@@ -116,6 +116,10 @@ module Emarsys
         @http.put("senders/#{sender.id}", sender.to_xml)
       end
 
+      def destory_sender(id)
+        @http.delete("senders/#{id}")
+      end
+
       def sender_exists?(email)
         retrieve_senders.any? { |s| s.address == email.to_s }
       end

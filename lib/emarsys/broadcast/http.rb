@@ -19,6 +19,10 @@ module Emarsys
         request(path, nil, :get)
       end
 
+      def delete(path)
+        request(path, nil, :delete)
+      end
+
       private
 
       def construct_request(method, path, data)
