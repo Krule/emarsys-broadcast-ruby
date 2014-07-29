@@ -22,6 +22,11 @@ module Emarsys
         trigger_send(publish_transactional(mailing), mailing.recipients)
       end
 
+      def create_recipient_field(name, type = 'text')
+        recipient_field = RecipientField.new(name, type)
+        @http.post('fields', recipient_field.to_xml)
+      end
+
       def create_batch(batch)
         xml = BatchXmlBuilder.new.build(batch)
         @http.post("batches/#{batch.name}", xml)
