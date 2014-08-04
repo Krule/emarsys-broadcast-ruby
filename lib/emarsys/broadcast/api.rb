@@ -10,14 +10,12 @@ module Emarsys
       end
 
       def send_batch(batch)
-        batch = supplement_batch_from_config batch
-        create_batch batch
+        create_batch(batch)
         upload_recipients batch.recipients_path
         trigger_import batch
       end
 
       def send_transactional(mailing)
-        mailing = supplement_from_config(mailing)
         create_transactional(mailing)
         trigger_send(publish_transactional(mailing), mailing.recipients)
       end
@@ -28,12 +26,12 @@ module Emarsys
       end
 
       def create_batch(batch)
-        xml = BatchXmlBuilder.new.build(batch)
+        xml = BatchXmlBuilder.new.build(supplement_batch_from_config(batch))
         @http.post("batches/#{batch.name}", xml)
       end
 
       def create_transactional(mailing)
-        xml = TransactionalXmlBuilder.new.build(batch)
+        xml = TransactionalXmlBuilder.new.build(supplement_from_config(mailing))
         @http.post("transactional_mailings/#{mailing.name}", xml)
       end
 
