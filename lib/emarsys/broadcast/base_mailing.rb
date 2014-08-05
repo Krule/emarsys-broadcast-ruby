@@ -31,6 +31,10 @@ module Emarsys
           send("#{name}=", value)
         end
       end
+
+      def to_s
+        name
+      end
     end
   end
 end

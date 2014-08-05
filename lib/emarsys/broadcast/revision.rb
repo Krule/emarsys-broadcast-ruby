@@ -1,10 +1,11 @@
 module Emarsys
   module Broadcast
     class Revision
-      attr_accessor :id
+      attr_accessor :id, :created
 
-      def initialize(id)
+      def initialize(id, created)
         @id = id
+        @created = created.to_datetime
       end
 
       def to_i

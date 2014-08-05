@@ -22,17 +22,20 @@ module Emarsys
 
       def create_recipient_field(name, type = 'text')
         recipient_field = RecipientField.new(name, type)
+        @logger.info(self){ "Recipient field #{name} saved" }
         @http.post('fields', recipient_field.to_xml)
       end
 
       def create_batch(batch)
         xml = BatchXmlBuilder.new.build(supplement_batch_from_config(batch))
-        @http.post("batches/#{batch.name}", xml)
+        @logger.info(self){ "Batch mailing `#{batch}` saved" }
+        @http.post("batches/#{batch}", xml)
       end
 
       def create_transactional(mailing)
         xml = TransactionalXmlBuilder.new.build(supplement_from_config(mailing))
-        @http.post("transactional_mailings/#{mailing.name}", xml)
+        @logger.info(self){ "Transactional mailing `#{mailing}` saved" }
+        @http.post("transactional_mailings/#{mailing}", xml)
       end
 
       def upload_recipients(recipients_path)
@@ -41,19 +44,30 @@ module Emarsys
 
       def trigger_import(batch)
         import_xml = XmlBuilder.new.import_xml(File.basename(batch.recipients_path))
-        @http.post("batches/#{batch.name}/import", import_xml)
+        @logger.info(self){ "Import for #{batch} triggered" }
+        @http.post("batches/#{batch}/import", import_xml)
       end
 
       def publish_transactional(mailing)
-        response = @http.post("transactional_mailings/#{mailing.name}/revisions", '<nothing/>')
+        revisions = retrieve_revisions(mailing)
+        # Delete first revision in case we are at the limit
+        destroy_revision(mailing, revisions.first) if revisions.size == 10
+        response = @http.post("transactional_mailings/#{mailing}/revisions", '<nothing/>')
+        @logger.info(self){ "Transactional mailing `#{mailing}` revision published" }
         Nokogiri::XML(response).xpath('//revision').map do |n|
-          mailing.revision = Revision.new(n.attr('id'))
+          mailing.revision = Revision.new(n.attr('id'), n.attr('created'))
         end
+      end
+
+      def destroy_revision(mailing, revision)
+        @logger.info(self){ "Transactional mailing `#{mailing}` revision ##{revision} destroyed" }
+        @http.delete("transactional_mailings/#{mailing}/revisions/#{revision}")
       end
 
       def trigger_send(mailing, csv_string)
         return @logger.error(self) { 'no revision published yet' } unless mailing.revision.present?
-        @http.post_csv("transactional_mailings/#{mailing.name}/revisions/#{mailing.revision}/recipients", csv_string)
+        @logger.info(self){ "Transactional mailing #{mailing} revision #{mailing.revision} send triggered" }
+        @http.post_csv("transactional_mailings/#{mailing}/revisions/#{mailing.revision}/recipients", csv_string)
       end
 
       def retrieve_batch_mailings
@@ -66,6 +80,20 @@ module Emarsys
             subject: node.xpath('subject').text
           )
         end
+      end
+
+      def retrieve_revisions(mailing)
+        response = @http.get("transactional_mailings/#{mailing}/revisions")
+        Nokogiri::XML(response).xpath('//revision').map do |node|
+          Revision.new(node.attr('id'), node.attr('created'))
+        end
+      end
+
+      # :first, :last, numeric (1..10)
+      def retrieve_revision(mailing, position)
+        position = -1 if position == :last
+        position = 0 if position == :first
+        retrieve_revisions(mailings)[position]
       end
 
       def retrieve_sender_domains
@@ -110,10 +138,12 @@ module Emarsys
 
       def create_sender(id, name, address)
         sender = Sender.new(id, name, address)
+        @logger.info(self){ "Sender `#{id}` saved" }
         @http.put("senders/#{sender.id}", sender.to_xml)
       end
 
       def destroy_sender(id)
+        @logger.info(self){ "Sender `#{id}` destroyed" }
         @http.delete("senders/#{id}")
       end
 
