@@ -51,10 +51,9 @@ module Emarsys
         end
       end
 
-      # recipients = CSV.string
       def trigger_send(mailing, csv_string)
         return @logger.error(self) { 'no revision published yet' } unless mailing.revision.present?
-        @http.post("transactional_mailings/#{mailing.name}/revisions/#{mailing.revision}/recipients", csv_string)
+        @http.post_csv("transactional_mailings/#{mailing.name}/revisions/#{mailing.revision}/recipients", csv_string)
       end
 
       def retrieve_batch_mailings

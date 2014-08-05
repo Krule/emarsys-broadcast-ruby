@@ -11,6 +11,10 @@ module Emarsys
         request(path, xml, :post)
       end
 
+      def post_csv(path, csv)
+        request(path, csv, :post, 'application/csv')
+      end
+
       def put(path, xml)
         request(path, xml, :put)
       end
@@ -25,11 +29,11 @@ module Emarsys
 
       private
 
-      def construct_request(method, path, data)
+      def construct_request(method, path, data, content_type)
         req = select_http_method(method, path)
         req.basic_auth(@config.api_user, Digest::SHA1.hexdigest(@config.api_password))
         req.body = data
-        req.content_type = 'application/xml'
+        req.content_type = content_type
         req
       end
 
@@ -41,9 +45,9 @@ module Emarsys
         https
       end
 
-      def request(path, data, method)
+      def request(path, data, method, content_type = 'application/xml')
         initialize_request.start do |http|
-          res = http.request(construct_request(method, "#{@config.api_base_path}/#{path}", data))
+          res = http.request(construct_request(method, "#{@config.api_base_path}/#{path}", data, content_type))
           return res.body if res.is_a?(Net::HTTPSuccess)
           Emarsys::Broadcast.logger.error(HTTP) { res.body }
         end
