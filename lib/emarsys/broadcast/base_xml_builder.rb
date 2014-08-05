@@ -1,5 +1,4 @@
 require 'nokogiri'
-require 'action_view'
 module Emarsys
   module Broadcast
     class BaseXmlBuilder
@@ -16,7 +15,7 @@ module Emarsys
       def shared_nodes(xml, mailing)
         xml.subject mailing.subject
         xml.html mailing.body_html
-        xml.text_ mailing.body_text || strip_tags(mailing.body_html)
+        xml.text_ mailing.body_text
       end
 
       def shared_properties(xml, mailing)

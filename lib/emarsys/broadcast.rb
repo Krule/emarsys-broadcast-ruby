@@ -13,6 +13,7 @@ require 'emarsys/broadcast/batch_mailing'
 require 'emarsys/broadcast/transactional_mailing'
 require 'emarsys/broadcast/batch' # deprecate in favor of batch_mailing
 require 'emarsys/broadcast/recipient_field'
+require 'emarsys/broadcast/revision'
 require 'emarsys/broadcast/sender'
 require 'emarsys/broadcast/sender_domain'
 require 'emarsys/broadcast/base_xml_builder'
