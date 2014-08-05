@@ -46,14 +46,14 @@ module Emarsys
 
       def publish_transactional(mailing)
         response = @http.post("transactional_mailings/#{mailing.name}/revisions", '<nothing/>')
-        Nokogiri::XML(response).xpath('//revision').map{ |n| Revision.new(n.attr('id')) }
+        Nokogiri::XML(response).xpath('//revision').map do |n|
+          mailing.revision = Revision.new(n.attr('id'))
+        end
       end
 
       # recipients = CSV.string
-      def trigger_send(revision, recipients)
-        unless revision.present?
-          return @logger.error(self) { 'no revision published yet' }
-        end
+      def trigger_send(mailing, recipients)
+        return @logger.error(self) { 'no revision published yet' } unless mailing.revision.present?
         @http.post("transactional_mailings/#{mailing.name}/revisions/#{mailing.revision/recipients}", recipients_string)
       end
 
