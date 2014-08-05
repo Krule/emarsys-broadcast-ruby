@@ -31,6 +31,7 @@ def create_minimal_batch
   batch.name = 'batch_name'
   batch.subject = 'subject'
   batch.body_html = 'body'
+  batch.body_text = 'body'
   batch.send_time = spec_time
   batch.sender = api.retrieve_sender_by_email('sender1@example.com')
   batch.sender_domain = 'e3.emarsys.net'
@@ -56,6 +57,7 @@ def create_minimal_html_batch
   batch.name="batch_name"
   batch.subject = 'subject'
   batch.body_html = '<h1>hello</h1>'
+  batch.body_text = 'hello'
   batch.send_time = spec_time
   batch.sender = api.retrieve_sender_by_email('sender1@example.com')
   batch.sender_domain = 'e3.emarsys.net'
@@ -68,6 +70,7 @@ def create_minimal_html_transaction
   transaction.name="transaction_name"
   transaction.subject = 'transaction_subject'
   transaction.body_html = '<h1>hello</h1>'
+  transaction.body_text = 'hello'
   transaction.recipient_fields = %W(EMAIL)
   transaction.sender = api.retrieve_sender_by_email('sender1@example.com')
   transaction.sender_domain = 'e3.emarsys.net'

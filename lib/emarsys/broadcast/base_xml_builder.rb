@@ -2,7 +2,6 @@ require 'nokogiri'
 module Emarsys
   module Broadcast
     class BaseXmlBuilder
-      include ActionView::Helpers::SanitizeHelper
       def build(arg)
         fail ArgumentError, 'argument is required' unless arg
         build_xml(arg).to_xml
