@@ -12,7 +12,7 @@ module Emarsys
       end
 
       def post_csv(path, csv)
-        request(path, csv, :post, 'application/csv')
+        request(path, csv, :post, 'text/csv')
       end
 
       def put(path, xml)
