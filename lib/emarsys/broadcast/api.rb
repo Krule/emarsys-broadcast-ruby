@@ -59,6 +59,10 @@ module Emarsys
         end
       end
 
+      def destroy_batch(batch)
+        @http.delete("batches/#{batch}")
+      end
+
       def destroy_revision(mailing, revision)
         @logger.info(self){ "Transactional mailing `#{mailing}` revision ##{revision} destroyed" }
         @http.delete("transactional_mailings/#{mailing}/revisions/#{revision}")
@@ -80,6 +84,10 @@ module Emarsys
             subject: node.xpath('subject').text
           )
         end
+      end
+
+      def retrieve_batch_by_name(name)
+        retrieve_batch_mailings.find { |b| b.name == name }
       end
 
       def retrieve_revisions(mailing)
