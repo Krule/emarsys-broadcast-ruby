@@ -50,7 +50,10 @@ module Emarsys
 
       def publish_transactional(mailing)
         revisions = retrieve_revisions(mailing)
+        #
         # Delete first revision in case we are at the limit
+        # Extract strategy in config
+        #
         destroy_revision(mailing, revisions.first) if revisions.size == 10
         response = @http.post("transactional_mailings/#{mailing}/revisions", '<nothing/>')
         @logger.info(self){ "Transactional mailing `#{mailing}` revision published" }
@@ -60,6 +63,7 @@ module Emarsys
       end
 
       def destroy_batch(batch)
+        @logger.info(self){ "Batch mailing `#{batch}` destroyed" }
         @http.delete("batches/#{batch}")
       end
 
@@ -101,7 +105,7 @@ module Emarsys
       def retrieve_revision(mailing, position)
         position = -1 if position == :last
         position = 0 if position == :first
-        retrieve_revisions(mailings)[position]
+        retrieve_revisions(mailing)[position]
       end
 
       def retrieve_sender_domains
@@ -124,9 +128,13 @@ module Emarsys
 
       def retrieve_transactional_mailings
         response = @http.get('transactional_mailings')
-        Nokogiri::XML(response).xpath('//mailings').map do |node|
-          TransactionalMailing.new(id: node.attr('name'))
+        Nokogiri::XML(response).xpath('//mailing').map do |node|
+          TransactionalMailing.new(name: node.attr('id'))
         end
+      end
+
+      def retrieve_transactional_mailing_by_name(name)
+        retrieve_transactional_mailings.find { |b| b.name == name }
       end
 
       def retrieve_senders
