@@ -8,6 +8,10 @@ module Emarsys
         xml = Nokogiri::XML::Builder.new do |xml|
           xml.importRequest {
             xml.filePath remote_path
+            xml.properties {
+              xml.property(key: 'Delimiter') { xml.text ',' }
+              xml.property(key: 'Encoding') { xml.text 'UTF-8' }
+            }
           }
         end
         xml.to_xml

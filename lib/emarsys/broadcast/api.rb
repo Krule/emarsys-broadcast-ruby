@@ -38,12 +38,12 @@ module Emarsys
         @http.post("transactional_mailings/#{mailing}", xml)
       end
 
-      def upload_recipients(recipients_path)
-        @sftp.upload_file(recipients_path, File.basename(recipients_path))
+      def upload_recipients(batch, local_path)
+        @sftp.upload_file(batch, local_path)
       end
 
       def trigger_import(batch)
-        import_xml = XmlBuilder.new.import_xml(File.basename(batch.recipients_path))
+        import_xml = XmlBuilder.new.import_xml(batch.recipients_path)
         @logger.info(self){ "Import for #{batch} triggered" }
         @http.post("batches/#{batch}/import", import_xml)
       end
@@ -52,7 +52,7 @@ module Emarsys
         revisions = retrieve_revisions(mailing)
         #
         # Delete first revision in case we are at the limit
-        # Extract strategy in config
+        # Implement different strategies and extract strategy definition to config
         #
         destroy_revision(mailing, revisions.first) if revisions.size == 10
         response = @http.post("transactional_mailings/#{mailing}/revisions", '<nothing/>')
