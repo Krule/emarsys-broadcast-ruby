@@ -5,7 +5,6 @@ require 'timecop'
 require 'webmock/rspec'
 require 'digest/sha1'
 
-
 def restore_default_config
   Emarsys::Broadcast.configuration = nil
   Emarsys::Broadcast.configure {}
