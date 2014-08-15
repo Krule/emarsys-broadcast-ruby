@@ -101,7 +101,7 @@ module Emarsys
         BatchMailing.new(
           name: batch.attr('id'),
           send_time: DateTime.parse(batch.xpath('runDate').text),
-          send_time:batch.xpath('subject').text,
+          send_time: batch.xpath('subject').text
         )
       end
 
