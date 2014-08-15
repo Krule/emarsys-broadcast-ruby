@@ -48,6 +48,11 @@ module Emarsys
         @http.post("batches/#{batch}/import", import_xml)
       end
 
+      def trigger_test(batch, recipients_xml)
+        @logger.info(self){ "Import for #{batch} triggered" }
+        @http.post("batches/#{batch}/test", recipients_xml)
+      end
+
       def publish_transactional(mailing)
         revisions = retrieve_revisions(mailing)
         #
@@ -134,7 +139,10 @@ module Emarsys
       end
 
       def retrieve_transactional_mailing_by_name(name)
-        retrieve_transactional_mailings.find { |b| b.name == name }
+        response = @http.get("transactional_mailing/#{name}")
+        Nokogiri::XML(response).xpath('//mailing') do |node|
+          TransactionalMailing.new(name: node.attr('id'))
+        end
       end
 
       def retrieve_senders
