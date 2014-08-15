@@ -139,10 +139,8 @@ module Emarsys
       end
 
       def retrieve_transactional_mailing_by_name(name)
-        response = @http.get("transactional_mailing/#{name}")
-        Nokogiri::XML(response).xpath('//mailing') do |node|
-          TransactionalMailing.new(name: node.attr('id'))
-        end
+        response = @http.get("transactional_mailings/#{name}")
+        TransactionalMailing.new(name: Nokogiri::XML(response).xpath('//mailing').first.attr('id'))
       end
 
       def retrieve_senders
