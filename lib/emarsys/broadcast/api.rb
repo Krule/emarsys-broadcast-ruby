@@ -96,7 +96,13 @@ module Emarsys
       end
 
       def retrieve_batch_by_name(name)
-        retrieve_batch_mailings.find { |b| b.name == name }
+        response = @http.get("batches/#{name}")
+        batch = Nokogiri::XML(response).xpath('//batch').first
+        BatchMailing.new(
+          name: batch.attr('id'),
+          send_time: DateTime.parse(batch.xpath('runDate').text),
+          send_time:batch.xpath('subject').text,
+        )
       end
 
       def retrieve_revisions(mailing)
