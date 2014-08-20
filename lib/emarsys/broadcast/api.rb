@@ -9,6 +9,11 @@ module Emarsys
         @xml_builder = XmlBuilder.new
       end
 
+      def batch_mailing_status(id)
+        response = @http.get("batches/#{id}/status")
+        Nokogiri::XML(response).css('status').first.text
+      end
+
       def send_batch(batch)
         create_batch(batch)
         upload_recipients batch.recipients_path
