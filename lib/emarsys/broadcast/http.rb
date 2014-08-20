@@ -48,8 +48,12 @@ module Emarsys
       def request(path, data, method, content_type = 'application/xml')
         initialize_request.start do |http|
           res = http.request(construct_request(method, "#{@config.api_base_path}/#{path}", data, content_type))
-          return res.body if res.is_a?(Net::HTTPSuccess)
-          Emarsys::Broadcast.logger.error(HTTP) { res.body }
+          if res.is_a?(Net::HTTPSuccess)
+            return res.body
+          else
+            Emarsys::Broadcast.logger.error(HTTP) { res.body }
+            return res.body
+           end
         end
       end
 

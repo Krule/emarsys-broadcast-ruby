@@ -10,8 +10,14 @@ module Emarsys
       end
 
       def batch_mailing_status(id)
-        response = @http.get("batches/#{id}/status")
-        Nokogiri::XML(response).css('status').first.text
+        response = @http.get("batches/#{id}x/status")
+        status = Nokogiri::XML(response).css('status')
+        if status.present?
+          status.first.text
+        else
+          # Move this to class to handle errors
+          Nokogiri::XML(response).xpath('//ERROR').first.text
+        end
       end
 
       def send_batch(batch)
