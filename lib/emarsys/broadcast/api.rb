@@ -25,10 +25,10 @@ module Emarsys
             if node.css('error').present?
               is.error = node.css('error').text
             else
-              is.imported_count = node.css('imported_count')
-              is.invalid_count = node.css('invalid_count')
-              is.column_count = node.css('column_count')
-              is.file_size = node.css('file_size')
+              is.imported_count = node.css('imported_count').text
+              is.invalid_count = node.css('invalid_count').text
+              is.column_count = node.css('column_count').text
+              is.file_size = node.css('file_size').text
             end
           end
 
