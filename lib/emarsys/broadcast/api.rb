@@ -11,12 +11,8 @@ module Emarsys
 
       def batch_mailing_status(id)
         response = @http.get("batches/#{id}/status")
-        status = Nokogiri::XML(response).css('status')
-        if status.present?
-          status.first.text
-        else
-          # Move this to class to handle errors
-          Nokogiri::XML(response).xpath('//ERROR').first.text
+        handle_error_reponse 'status', Nokogiri::XML(response) do |message|
+          Status.new(message)
         end
       end
 
@@ -206,6 +202,14 @@ module Emarsys
       end
 
       private
+
+      def handle_error_reponse(node, response)
+        xml = response.css(node)
+        return yield(xml.text) if xml.present?
+
+        xml = response.css('ERROR')
+        return ApiError.new(xml.attr('id'), xml.text)
+      end
 
       def validate_mailing(mailing)
         fail ValidationError.new('Mailing is invalid', mailing.errors.full_messages) unless mailing.valid?

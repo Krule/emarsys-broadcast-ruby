@@ -53,7 +53,7 @@ module Emarsys
           else
             Emarsys::Broadcast.logger.error(HTTP) { res.body }
             return res.body
-           end
+          end
         end
       end
 
