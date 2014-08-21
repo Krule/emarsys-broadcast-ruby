@@ -11,10 +11,27 @@ module Emarsys
 
       def batch_mailing_status(id)
         response = @http.get("batches/#{id}/status")
-
-
         handle_error_reponse 'status', response do |node|
           Status.new(node.text)
+        end
+      end
+
+      def batch_mailing_import_status(id)
+        response = @http.get("batches/#{id}/import/status")
+        handle_error_reponse 'import', response do |node|
+          ImportStatus.new(node.css('status').text) do |is|
+            is.created = DateTime.parse(node.css('created').text)
+            is.updated = DateTime.parse(node.css('updated').text)
+            if node.css('error').present?
+              is.error = node.css('error').text
+            else
+              is.imported_count = node.css('imported_count')
+              is.invalid_count = node.css('invalid_count')
+              is.column_count = node.css('column_count')
+              is.file_size = node.css('file_size')
+            end
+          end
+
         end
       end
 
@@ -53,8 +70,8 @@ module Emarsys
 
       def trigger_import(batch)
         import_xml = XmlBuilder.new.import_xml(batch.recipients_path)
-        @logger.info(self){ "Import for #{batch} triggered" }
-        @http.post("batches/#{batch}/import", import_xml)
+        response = @http.post("batches/#{batch}/import", import_xml)
+        @logger.info(self){ "Import for #{batch} triggered and responded with #{response}" }
       end
 
       def trigger_test(batch, recipients_xml)
