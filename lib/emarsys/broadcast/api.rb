@@ -11,8 +11,10 @@ module Emarsys
 
       def batch_mailing_status(id)
         response = @http.get("batches/#{id}/status")
-        handle_error_reponse 'status', Nokogiri::XML(response) do |message|
-          Status.new(message)
+
+
+        handle_error_reponse 'status', response do |node|
+          Status.new(node.text)
         end
       end
 
@@ -104,12 +106,13 @@ module Emarsys
 
       def retrieve_batch_by_name(name)
         response = @http.get("batches/#{name}")
-        batch = Nokogiri::XML(response).xpath('//batch').first
-        BatchMailing.new(
-          name: batch.attr('id'),
-          send_time: DateTime.parse(batch.xpath('runDate').text),
-          send_time: batch.xpath('subject').text
-        )
+        handle_error_reponse 'batch', response do |node|
+          BatchMailing.new(
+            name: node.attr('id'),
+            send_time: DateTime.parse(node.css('runDate').text),
+            send_time: node.css('subject').text
+          )
+        end
       end
 
       def retrieve_revisions(mailing)
@@ -203,12 +206,13 @@ module Emarsys
 
       private
 
-      def handle_error_reponse(node, response)
-        xml = response.css(node)
-        return yield(xml.text) if xml.present?
+      def handle_error_reponse(key, response)
+        xml = Nokogiri::XML(response)
+        node = xml.css(key)
+        return yield(node) if node.present?
 
-        xml = response.css('ERROR')
-        return ApiError.new(xml.attr('id'), xml.text)
+        node = xml.css('ERROR')
+        return ApiError.new(node.attr('id'), node.text)
       end
 
       def validate_mailing(mailing)
