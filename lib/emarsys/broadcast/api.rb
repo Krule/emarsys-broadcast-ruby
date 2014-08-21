@@ -108,7 +108,7 @@ module Emarsys
         response = @http.get("batches/#{name}")
         handle_error_reponse 'batch', response do |node|
           BatchMailing.new(
-            name: node.attr('id'),
+            name: node.attr('id').value,
             send_time: DateTime.parse(node.css('runDate').text),
             send_time: node.css('subject').text
           )
