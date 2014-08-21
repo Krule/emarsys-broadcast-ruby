@@ -20,7 +20,7 @@ module Emarsys
         if error.present?
           "#{status} with #{error}"
         else
-          "#{status} on #{updated} with #{column_count} columns, #{imported_count} imported and #{invalid_count} invalid"
+          "#{status} on #{updated.strftime('%d.%m.%Y %H:%M:%S')} with #{column_count} columns, #{imported_count} imported emails of which #{invalid_count} were invalid"
         end
       end
     end
