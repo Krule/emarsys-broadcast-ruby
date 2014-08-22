@@ -11,14 +11,18 @@ module Emarsys
 
       def batch_mailing_status(id)
         response = @http.get("batches/#{id}/status")
-        handle_error_reponse 'status', response do |node|
+        handle_error_reponse(key: 'status', response: response) do |node|
           Status.new(node.text)
         end
       end
 
+      def transactional_mailing_status(id)
+        retrieve_transactional_mailing_by_name(id) unless id.blank?
+      end
+
       def batch_mailing_import_status(id)
         response = @http.get("batches/#{id}/import/status")
-        handle_error_reponse 'import', response do |node|
+        handle_error_reponse(key: 'import', response: response) do |node|
           ImportStatus.new(node.css('status').text) do |is|
             is.created = DateTime.parse(node.css('created').text)
             is.updated = DateTime.parse(node.css('updated').text)
@@ -31,7 +35,6 @@ module Emarsys
               is.file_size = node.css('file_size').text
             end
           end
-
         end
       end
 
@@ -55,7 +58,8 @@ module Emarsys
       def create_batch(batch)
         xml = BatchXmlBuilder.new.build(supplement_batch_from_config(batch))
         @logger.info(self){ "Batch mailing `#{batch}` saved" }
-        @http.post("batches/#{batch}", xml)
+        response = @http.post("batches/#{batch}", xml)
+        handle_error_reponse(response: response)
       end
 
       def create_transactional(mailing)
@@ -123,7 +127,7 @@ module Emarsys
 
       def retrieve_batch_by_name(name)
         response = @http.get("batches/#{name}")
-        handle_error_reponse 'batch', response do |node|
+        handle_error_reponse(key: 'batch', response: response) do |node|
           BatchMailing.new(
             name: node.attr('id').value,
             send_time: DateTime.parse(node.css('runDate').text),
@@ -173,7 +177,9 @@ module Emarsys
 
       def retrieve_transactional_mailing_by_name(name)
         response = @http.get("transactional_mailings/#{name}")
-        TransactionalMailing.new(name: Nokogiri::XML(response).xpath('//mailing').first.attr('id'))
+        handle_error_reponse(key: 'mailing', response: response) do |node|
+          TransactionalMailing.new(name: node.first.attr('id'))
+        end
       end
 
       def retrieve_senders
@@ -188,13 +194,16 @@ module Emarsys
       end
 
       def retrieve_sender(id)
-        retrieve_senders.find { |s| s.id == id }
+        response = @http.get("senders/#{id}")
+        handle_error_reponse(key: 'sender', response: response) do |node|
+          Sender.new(node.attr('id'), node.xpath('name').text, node.xpath('address').text)
+        end
       end
 
       def create_sender(id, name, address)
         sender = Sender.new(id, name, address)
-        @logger.info(self){ "Sender `#{id}` saved" }
-        @http.put("senders/#{sender.id}", sender.to_xml)
+        response = @http.put("senders/#{sender.id}", sender.to_xml)
+        handle_error_reponse(response: response)
       end
 
       def destroy_sender(id)
@@ -223,13 +232,17 @@ module Emarsys
 
       private
 
-      def handle_error_reponse(key, response)
-        xml = Nokogiri::XML(response)
-        node = xml.css(key)
-        return yield(node) if node.present?
-
+      # Key must be present if block is given
+      def handle_error_reponse(data = { key: nil, response: nil })
+        xml = Nokogiri::XML(data[:response])
+        if block_given?
+          node = xml.css(data[:key])
+          return yield(node) if node.present?
+        else
+          return '' if data[:response].empty?
+        end
         node = xml.css('ERROR')
-        return ApiError.new(node.attr('id'), node.text)
+        fail ApiError.new(node.attr('id'), node.text)
       end
 
       def validate_mailing(mailing)

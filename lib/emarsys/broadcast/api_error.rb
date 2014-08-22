@@ -1,6 +1,6 @@
 module Emarsys
   module Broadcast
-    class ApiError
+    class ApiError < StandardError
       attr_accessor :id, :message
 
       def initialize(id, message)
