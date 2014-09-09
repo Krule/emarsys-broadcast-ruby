@@ -34,7 +34,7 @@ describe Emarsys::Broadcast::API do
     let(:api) { Emarsys::Broadcast::API.new }
     let(:sender) { Emarsys::Broadcast::Sender.new('new_sender', 'Test Sender', 'example@example.com') }
     it 'should create sender' do
-      api.create_sender('id', 'name', 'address').should be nil
+      api.create_sender('id', 'name', 'address').should eq ""
     end
   end
 
