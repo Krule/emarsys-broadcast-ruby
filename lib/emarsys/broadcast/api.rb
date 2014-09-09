@@ -110,7 +110,15 @@ module Emarsys
       def trigger_send(mailing, csv_string)
         return @logger.error(self) { 'no revision published yet' } unless mailing.revision.present?
         @logger.info(self){ "Transactional mailing #{mailing} revision #{mailing.revision} send triggered" }
-        @http.post_csv("transactional_mailings/#{mailing}/revisions/#{mailing.revision}/recipients", csv_string)
+        response = @http.post_csv("transactional_mailings/#{mailing}/revisions/#{mailing.revision}/recipients", csv_string)
+        handle_error_reponse(response: response)
+      end
+
+      def trigger_send_test(mailing, csv_string)
+        return @logger.error(self) { 'no revision published yet' } unless mailing.revision.present?
+        @logger.info(self){ "Transactional mailing test #{mailing} revision #{mailing.revision} send triggered" }
+        response = @http.post_csv("transactional_mailings/#{mailing}/test_recipients", csv_string)
+        handle_error_reponse(response: response)
       end
 
       def retrieve_batch_mailings
@@ -158,7 +166,10 @@ module Emarsys
       end
 
       def retrieve_sender_domain(domain)
-        retrieve_sender_domains.find { |d| d.host == domain }
+        response = @http.get("domains/#{domain}")
+        handle_error_reponse(key: 'domain', response: response) do |node|
+          Status.new(node.text)
+        end
       end
 
       def retrieve_fields
@@ -239,7 +250,7 @@ module Emarsys
           node = xml.css(data[:key])
           return yield(node) if node.present?
         else
-          return '' if data[:response].empty?
+          return '' if data[:response].blank?
         end
         node = xml.css('ERROR')
         fail ApiError.new(node.attr('id'), node.text)

@@ -2,7 +2,7 @@ module Emarsys
   module Broadcast
     module Validation
       def string_present? value
-        !value.to_s.strip.empty?
+        !value.to_s.strip.blank?
       end
 
       def within_range? value, range
