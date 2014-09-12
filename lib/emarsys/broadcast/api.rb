@@ -10,6 +10,7 @@ module Emarsys
       end
 
       def batch_mailing_status(id)
+        return Status.new('Not saved yet') if id.blank?
         response = @http.get("batches/#{id}/status")
         handle_error_reponse(key: 'status', response: response) do |node|
           Status.new(node.text)
