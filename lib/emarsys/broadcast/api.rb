@@ -140,7 +140,7 @@ module Emarsys
           BatchMailing.new(
             name: node.attr('id').value,
             send_time: DateTime.parse(node.css('runDate').text),
-            send_time: node.css('subject').text
+            subject: node.css('subject').text
           )
         end
       end
