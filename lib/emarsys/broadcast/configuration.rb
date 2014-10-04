@@ -24,7 +24,7 @@ module Emarsys
         @api_host = 'api.broadcast1.emarsys.net'
         @api_base_path = '/v2'
         @api_port = 433
-        @api_timeout = 20 # seconds
+        @api_timeout = 10 # seconds
         @import_delay_hours = 1
       end
     end
